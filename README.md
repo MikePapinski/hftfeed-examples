@@ -7,8 +7,9 @@ Each folder matches a tutorial on the [HFTFeed YouTube channel](https://www.yout
 | Example | Language | What it does | Docs |
 | --- | --- | --- | --- |
 | [`csharp/quickstart`](csharp/quickstart) | C# (.NET 8+) | Connects with the `HFTFeed.Client` NuGet package, prints the symbol list, streams EURUSD and gold, and logs out cleanly on Ctrl+C | [.NET SDK](https://hftfeed.com/docs/dotnet?utm_source=github&utm_medium=repo&utm_campaign=hftfeed_examples) |
+| [`python/hftfeed_fix.py`](python/hftfeed_fix.py) | Python 3 (standard library only) | Speaks raw FIX 4.4 over a socket, with no SDK and no FIX library: logon, symbol list, market data request, snapshots, heartbeats, clean logout | [FIX reference](https://hftfeed.com/docs/fixmsg?utm_source=github&utm_medium=repo&utm_campaign=hftfeed_examples) |
 
-More examples (raw FIX 4.4, Python, recording tick data) will land here as the tutorials ship.
+More examples (recording tick data, building candles) will land here as the tutorials ship.
 
 ## Before you run anything
 
@@ -37,6 +38,17 @@ dotnet run
 You should see `Connection: CONNECTED`, the symbol list, two `Subscribed:` notices and then one line per price update. Ticks only flow while a market is open. Press Ctrl+C to stop: the app sends a FIX Logout before it exits.
 
 The login is read from environment variables so it never ends up in source control. The feed connection is plain TCP, so use a password you don't use anywhere else.
+
+## Python, raw FIX 4.4
+
+```bash
+export HFTFEED_COMP_ID=C1000            # your Quote Sender Comp ID from the Connection page
+export HFTFEED_USER="you@example.com"   # your hftfeed.com e-mail
+export HFTFEED_PASSWORD="your-password"
+python3 python/hftfeed_fix.py           # Ctrl+C logs out cleanly
+```
+
+Optional: `HFTFEED_SYMBOLS=2001,1013` (symbol keys), `HFTFEED_HEARTBEAT=30` (5–60 s), `HFTFEED_RAW=1` to print every FIX frame. No third-party packages are needed. The same messages work from any language that can open a TCP socket.
 
 ## Limits worth knowing
 
